@@ -49,6 +49,8 @@ with d.XDMFFile("result1.xdmf") as file:
 
 This writes `result.xdmf` light-data and `result.h5` heavy-data files. These can be visualized in ParaView thanks to my contribution and gives the following picture
 
+![dg2](test1.png)
+
 Apart from `CG` and `DG` spaces on triangles, tetrahedra, quadrulaterals and hexahedra, non-trivial function space Raviart-Thomas of order 1 (FEniCS notation, in mathematics it is usually called degree 0) could be visualized.
 The FEniCS code
 ```python
@@ -65,5 +67,20 @@ with d.XDMFFile("result2.xdmf") as file:
 produces a function, which has continuous normal components over edges of triangles. 
 Normal component is the same as X-component for some edges and its continuity is clearly visible 
 
+![rt1_x](test2_rtx.png)
 
 Glyphs for such vector space shown on its magnitude looks like
+
+![rt1_glyph](test2_rtglyph.png)
+
+### GSoC blog
+
+You can have a look at my progress in chronological order as captured in my blog, http://karlin.mff.cuni.cz/~habera/?p=gsoc17
+
+### Future work
+
+* Higher-order elements (degree > 2) are not implemented in VTK. My code interpolates such functions to the linear elements and plots them instead. More accurate approximation is possible with tesselation of element into linear subelements.
+* DOLFIN XDMF IO data format stores 4 data arrays, but VTK and XDMF visualization takes into account only first two of them. The last two array which contain number of degrees of freedom in cell and cell ordering is not needed for uniform (with respect to degree) elements. We should get rid of this redundancy in DOLFIN.
+* More finite element families could be implemented, `Crouzeix-Raviart`, `Brezzi-Douglas-Marini`, etc.
+* Reading a DOLFIN function assumes full knowledge of a FunctionSpace where the function lives. From a user point of view this is too restrictive and there are possibilities how this could be simplified.
+* One of the stored arrays, the array containing so-called degrees of freedom mapping, usually repeats when time series of a functions from the same space is stored. This produces redundant data. There is a space for optimization.
